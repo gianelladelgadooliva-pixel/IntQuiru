@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1"/>
+<title>¿Quién tiene razón? — Abdomen agudo ginecológico</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.0.0/tabler-icons.min.css"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --red:#1A6FC4;--red-dark:#1558A0;--red-light:#D6E8FA;--red-mid:#4A9FE0;
+  --ink:#0D1117;--ink2:#2C3E50;--ink3:#5D6D7E;
+  --paper:#F8F9FA;--paper2:#EDF0F2;--paper3:#E2E8ED;
+  --white:#FFFFFF;
+  --green:#1A7A4A;--green-bg:#D4EFDF;
+  --amber:#B7770D;--amber-bg:#FEF9E7;
+  --slate:#34495E;--slate-bg:#EBF0F5;
+  --mono:'JetBrains Mono',monospace;
+  --sans:'Space Grotesk',sans-serif;
+  --r:10px;--r-lg:16px;--r-xl:20px;
+}
+body{font-family:var(--sans);background:var(--paper);color:var(--ink);min-height:100vh;display:flex;justify-content:center;}
+.app{width:100%;max-width:480px;background:var(--white);min-height:100vh;display:flex;flex-direction:column;position:relative;overflow:hidden;}
+
+/* ── HEADER STRIP ── */
+.header-strip{background:var(--ink);color:var(--white);padding:12px 16px;display:flex;align-items:center;gap:10px;flex-shrink:0;}
+.header-strip .pulse{width:8px;height:8px;border-radius:50%;background:var(--red-mid);animation:pulse 1.8s infinite;}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:.5;transform:scale(1.3);}}
+.header-strip span{font-size:12px;letter-spacing:.08em;color:#aaa;font-family:var(--mono);}
+.header-strip strong{font-size:12px;color:#fff;font-family:var(--mono);}
+
+/* ── SCREENS ── */
+.screen{display:none;flex:1;flex-direction:column;}
+.screen.active{display:flex;}
+.scroll-area{flex:1;overflow-y:auto;padding:20px 16px 100px;}
+
+/* ── HOME HERO ── */
+.hero{background:var(--ink);color:var(--white);padding:28px 20px 24px;position:relative;overflow:hidden;}
+.hero::before{content:'';position:absolute;top:-40px;right:-40px;width:160px;height:160px;border-radius:50%;background:var(--red);opacity:.08;}
+.hero::after{content:'';position:absolute;bottom:-30px;left:-20px;width:100px;height:100px;border-radius:50%;background:var(--red-mid);opacity:.06;}
+.hero-label{font-family:var(--mono);font-size:11px;color:var(--red-mid);letter-spacing:.1em;margin-bottom:10px;}
+.hero-title{font-size:26px;font-weight:700;line-height:1.2;margin-bottom:6px;}
+.hero-title em{color:var(--red-mid);font-style:normal;}
+.hero-sub{font-size:13px;color:#8899aa;line-height:1.5;}
+.hero-stats{display:flex;gap:16px;margin-top:18px;}
+.hero-stat{text-align:center;}
+.hero-stat-num{font-family:var(--mono);font-size:22px;font-weight:700;color:var(--white);}
+.hero-stat-label{font-size:10px;color:#667788;letter-spacing:.05em;margin-top:2px;}
+
+/* ── MODE TABS ── */
+.mode-tabs{display:flex;border-bottom:1px solid var(--paper3);background:var(--white);}
+.mode-tab{flex:1;padding:13px;text-align:center;font-size:13px;font-weight:500;color:var(--ink3);cursor:pointer;border:none;background:transparent;font-family:var(--sans);border-bottom:2px solid transparent;transition:all .15s;}
+.mode-tab.active{color:var(--red);border-bottom-color:var(--red);}
+
+/* ── INPUTS ── */
+.field-label{font-size:12px;font-weight:600;color:var(--ink3);letter-spacing:.04em;margin-bottom:6px;display:block;}
+.field-input{width:100%;padding:12px 14px;border:1.5px solid var(--paper3);border-radius:var(--r);font-size:15px;font-weight:500;font-family:var(--sans);color:var(--ink);background:var(--white);outline:none;transition:border-color .15s,box-shadow .15s;}
+.field-input:focus{border-color:var(--red);box-shadow:0 0 0 3px var(--red-light);}
+.field-group{margin-bottom:16px;}
+
+/* ── BUTTONS ── */
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:14px;border-radius:var(--r);border:none;font-size:15px;font-weight:600;font-family:var(--sans);cursor:pointer;transition:all .12s;margin-bottom:10px;}
+.btn-primary{background:var(--red);color:var(--white);}
+.btn-primary:hover{background:var(--red-dark);}
+.btn-secondary{background:var(--paper2);color:var(--ink);}
+.btn-secondary:hover{background:var(--paper3);}
+.btn-ghost{background:transparent;color:var(--ink3);border:1.5px solid var(--paper3);}
+.btn-ghost:hover{background:var(--paper2);}
+.btn-danger{background:transparent;color:var(--red);border:1.5px solid var(--red-light);}
+.btn-danger:hover{background:var(--red-light);}
+.btn:disabled{opacity:.35;cursor:not-allowed;}
+.btn i{font-size:18px;}
+
+/* ── INFO STRIP ── */
+.info-strip{background:var(--paper2);border-radius:var(--r);padding:12px 14px;font-size:12px;color:var(--ink3);line-height:1.6;margin-top:4px;}
+.info-strip i{color:var(--ink3);}
+
+/* ── PIN MODAL ── */
+.pin-overlay{position:fixed;inset:0;background:rgba(13,17,23,.7);display:flex;align-items:center;justify-content:center;z-index:100;padding:20px;backdrop-filter:blur(4px);}
+.pin-box{background:var(--white);border-radius:var(--r-xl);padding:28px 24px;width:100%;max-width:340px;}
+.pin-title{font-size:18px;font-weight:700;color:var(--ink);margin-bottom:4px;}
+.pin-sub{font-size:13px;color:var(--ink3);margin-bottom:20px;}
+.pin-dots{display:flex;justify-content:center;gap:12px;margin:16px 0;}
+.pin-dot{width:14px;height:14px;border-radius:50%;background:var(--paper3);transition:background .2s;}
+.pin-dot.filled{background:var(--red);}
+.pin-numpad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px;}
+.pin-key{padding:16px;border-radius:var(--r);border:1.5px solid var(--paper3);font-size:20px;font-weight:600;font-family:var(--mono);background:var(--white);cursor:pointer;text-align:center;transition:background .1s,transform .1s;}
+.pin-key:hover{background:var(--paper2);}
+.pin-key:active{transform:scale(.93);background:var(--paper3);}
+.pin-error{font-size:13px;color:var(--red);text-align:center;margin-top:8px;height:18px;}
+.pin-cancel{margin-top:12px;background:transparent;border:none;font-size:13px;color:var(--ink3);cursor:pointer;font-family:var(--sans);width:100%;padding:8px;}
+
+/* ── CASO SCREEN ── */
+.caso-topbar{padding:14px 16px 0;display:flex;align-items:center;justify-content:space-between;}
+.timer-wrap{display:flex;align-items:center;gap:6px;}
+.timer-num{font-family:var(--mono);font-size:15px;font-weight:700;}
+.timer-bar{height:4px;background:var(--paper3);margin:10px 16px 0;border-radius:2px;overflow:hidden;}
+.timer-fill{height:100%;border-radius:2px;background:var(--red);transition:width 1s linear,background .3s;}
+.progress-dots{display:flex;gap:6px;justify-content:center;padding:10px 0 4px;}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--paper3);}
+.dot.done{background:var(--green);}
+.dot.active{background:var(--red);}
+
+/* ── CASO CARD ── */
+.caso-card{background:var(--ink);border-radius:var(--r-lg);padding:18px;margin-bottom:14px;color:var(--white);}
+.caso-num{font-family:var(--mono);font-size:10px;color:var(--red-mid);letter-spacing:.1em;margin-bottom:6px;}
+.caso-title{font-size:17px;font-weight:700;color:var(--white);margin-bottom:14px;}
+.dato{display:flex;gap:10px;margin-bottom:8px;align-items:flex-start;}
+.dato i{font-size:16px;color:#667788;flex-shrink:0;margin-top:2px;}
+.dato span{font-size:13px;color:#ccd6e0;line-height:1.55;}
+
+/* ── SECCION LABEL ── */
+.sec-label{font-size:10px;font-weight:700;letter-spacing:.1em;color:var(--ink3);text-transform:uppercase;margin-bottom:10px;}
+
+/* ── NPC CARDS ── */
+.npc-card{border:1.5px solid var(--paper3);border-radius:var(--r-lg);padding:14px 16px;margin-bottom:10px;cursor:pointer;transition:border-color .15s,background .15s,transform .1s;}
+.npc-card:hover{border-color:var(--ink3);transform:translateY(-1px);}
+.npc-card.selected{border-color:var(--red);background:var(--red-light);}
+.npc-card.correct{border-color:var(--green);background:var(--green-bg);cursor:default;transform:none;}
+.npc-card.wrong{border-color:var(--red);background:var(--red-light);opacity:.7;cursor:default;transform:none;}
+.npc-card.neutral-result{cursor:default;transform:none;}
+.npc-header{display:flex;gap:12px;align-items:center;margin-bottom:8px;}
+.npc-av{width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:12px;font-weight:700;flex-shrink:0;}
+.npc-name{font-size:14px;font-weight:700;color:var(--ink);}
+.npc-role{font-size:11px;color:var(--ink3);margin-top:1px;}
+.npc-diag{font-size:14px;font-weight:600;color:var(--ink2);margin-bottom:5px;}
+.npc-arg{font-size:12px;color:var(--ink3);line-height:1.6;}
+
+/* ── RESULTADO ── */
+.resultado-hero{text-align:center;padding:20px 0 12px;}
+.resultado-icon{font-size:52px;display:block;line-height:1;}
+.resultado-title{font-size:22px;font-weight:700;margin-top:8px;}
+.resultado-pts{font-family:var(--mono);font-size:14px;margin-top:4px;}
+.explain-card{background:var(--paper2);border-left:3px solid var(--red);border-radius:0 var(--r) var(--r) 0;padding:14px 16px;font-size:13px;color:var(--ink2);line-height:1.7;margin-bottom:14px;}
+.explain-card strong{color:var(--ink);font-weight:700;}
+
+/* ── BADGE ── */
+.badge{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;letter-spacing:.04em;}
+.badge-ok{background:var(--green-bg);color:var(--green);}
+.badge-info{background:var(--slate-bg);color:var(--slate);}
+.badge-you{background:var(--red-light);color:var(--red);}
+
+/* ── RANKING ── */
+.rank-row{display:flex;align-items:center;gap:10px;padding:11px 0;border-bottom:1px solid var(--paper3);}
+.rank-row:last-child{border-bottom:none;}
+.rank-pos{font-family:var(--mono);font-size:15px;width:28px;text-align:center;color:var(--ink3);flex-shrink:0;}
+.rank-name{flex:1;font-size:14px;font-weight:600;color:var(--ink);}
+.rank-pts{font-family:var(--mono);font-size:14px;font-weight:700;color:var(--ink);}
+.rank-row.me{background:var(--red-light);border-radius:var(--r);padding:11px 10px;margin:2px -10px;}
+
+/* ── FINAL ── */
+.final-hero{background:var(--ink);padding:28px 20px;text-align:center;color:var(--white);}
+.trophy{font-size:56px;line-height:1;display:block;margin-bottom:12px;}
+.final-group{font-family:var(--mono);font-size:12px;color:#667788;letter-spacing:.08em;margin-bottom:4px;}
+.final-score{font-size:52px;font-weight:700;font-family:var(--mono);color:var(--white);}
+.final-pts-label{font-size:12px;color:#667788;margin-top:2px;}
+.final-verdict{font-size:14px;color:#aab;margin-top:8px;line-height:1.4;}
+
+/* ── DOCENTE PANEL ── */
+.docente-header{background:var(--ink2);color:var(--white);padding:16px;border-radius:var(--r-lg);margin-bottom:14px;}
+.docente-header-title{font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px;margin-bottom:4px;}
+.docente-header-sub{font-size:12px;color:#99aabb;}
+.answer-row{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--paper3);}
+.answer-row:last-child{border-bottom:none;}
+.answer-num{font-family:var(--mono);font-size:11px;background:var(--red);color:#fff;border-radius:4px;padding:2px 6px;flex-shrink:0;margin-top:2px;}
+.answer-text{font-size:13px;color:var(--ink2);line-height:1.5;}
+.answer-text strong{color:var(--ink);}
+
+.card-section{background:var(--white);border:1.5px solid var(--paper3);border-radius:var(--r-lg);padding:16px;margin-bottom:14px;}
+
+@media(prefers-color-scheme:dark){
+  :root{
+    --ink:#E8EDF2;--ink2:#B8C5D0;--ink3:#778899;
+    --paper:#0D1117;--paper2:#161B22;--paper3:#21262D;
+    --white:#0D1117;
+    --red-light:#0D2340;
+    --green-bg:#0D2818;--slate-bg:#1A2332;
+    --amber-bg:#2A1D08;
+  }
+  .pin-box{background:#161B22;border:1px solid #21262D;}
+  .caso-card{background:#161B22;}
+  .pin-overlay{background:rgba(0,0,0,.8);}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- HEADER STRIP -->
+<div class="header-strip">
+  <div class="pulse"></div>
+  <span>UPNW · INTEGRACIÓN QUIRÚRGICA</span>
+  <strong style="margin-left:auto">XI CICLO</strong>
+</div>
+
+<!-- ════ HOME ════ -->
+<div id="screen-home" class="screen active">
+  <div class="hero">
+    <div class="hero-label">SESIÓN 14 · CASO CLÍNICO</div>
+    <div class="hero-title">¿Quién tiene<br><em>razón?</em></div>
+    <div class="hero-sub">Abdomen agudo ginecológico — 3 casos, 3 dilemas diagnósticos. El grupo decide.</div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="hero-stat-num">3</div><div class="hero-stat-label">CASOS</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">450</div><div class="hero-stat-label">PTS MÁX</div></div>
+      <div class="hero-stat"><div class="hero-stat-num">+50</div><div class="hero-stat-label">BONUS VEL.</div></div>
+    </div>
+  </div>
+
+  <div class="mode-tabs">
+    <button class="mode-tab active" id="tab-grupo" onclick="setMode('grupo')">
+      <i class="ti ti-users"></i> Modo grupo
+    </button>
+    <button class="mode-tab" id="tab-docente" onclick="openPin()">
+      <i class="ti ti-lock"></i> Panel docente
+    </button>
+  </div>
+
+  <div class="scroll-area">
+    <div id="panel-grupo">
+      <div class="field-group" style="margin-top:4px;">
+        <span class="field-label"><i class="ti ti-tag"></i> NOMBRE DEL GRUPO</span>
+        <input class="field-input" type="text" id="group-name" placeholder="Ej: Grupo Alfa" maxlength="20"
+          onkeydown="if(event.key==='Enter')startGame()"/>
+      </div>
+      <button class="btn btn-primary" onclick="startGame()">
+        <i class="ti ti-player-play"></i> Iniciar juego
+      </button>
+      <div class="info-strip">
+        <i class="ti ti-info-circle"></i>
+        Lean el caso clínico en grupo, luego discutan qué médico tiene el diagnóstico correcto.<br>
+        100 pts por acierto · Hasta +50 pts bonus por velocidad · Sin penalización por error.
+      </div>
+    </div>
+
+    <div id="panel-docente" style="display:none;">
+      <div class="docente-header">
+        <div class="docente-header-title"><i class="ti ti-shield-check"></i> Panel docente</div>
+        <div class="docente-header-sub">Vista de control — solo visible con PIN</div>
+      </div>
+      <div class="card-section">
+        <div class="sec-label">Ranking en tiempo real</div>
+        <div id="ranking-live">
+          <div style="font-size:13px;color:var(--ink3);text-align:center;padding:1.5rem 0;">
+            <i class="ti ti-clock"></i> Esperando grupos...
+          </div>
+        </div>
+        <button class="btn btn-ghost" style="margin-top:12px;" onclick="renderRanking()">
+          <i class="ti ti-refresh"></i> Actualizar
+        </button>
+        <button class="btn btn-danger" onclick="clearAll()">
+          <i class="ti ti-trash"></i> Reiniciar partida
+        </button>
+      </div>
+      <div class="card-section">
+        <div class="sec-label">Respuestas correctas</div>
+        <div class="answer-row"><span class="answer-num">C1</span><div class="answer-text"><strong>Dr. Ramírez</strong> — Embarazo ectópico roto con hemoperitoneo</div></div>
+        <div class="answer-row"><span class="answer-num">C2</span><div class="answer-text"><strong>Dra. Torres</strong> — Torsión ovárica derecha</div></div>
+        <div class="answer-row"><span class="answer-num">C3</span><div class="answer-text"><strong>Dr. Vega</strong> — Absceso tubo-ovárico complicado</div></div>
+      </div>
+      <button class="btn btn-ghost" onclick="lockDocente()">
+        <i class="ti ti-lock"></i> Cerrar panel docente
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ CASO ════ -->
+<div id="screen-caso" class="screen" style="flex-direction:column;">
+  <div class="caso-topbar">
+    <span class="badge badge-info" id="caso-badge">Caso 1 de 3</span>
+    <div class="timer-wrap">
+      <i class="ti ti-clock" style="font-size:15px;color:var(--ink3);"></i>
+      <span class="timer-num" id="timer-num">45</span><span style="font-size:12px;color:var(--ink3);">s</span>
+    </div>
+  </div>
+  <div class="timer-bar"><div class="timer-fill" id="timer-fill" style="width:100%;"></div></div>
+  <div class="progress-dots" id="progress-dots"></div>
+
+  <div class="scroll-area" style="padding-top:4px;">
+    <!-- Fase 1 -->
+    <div id="fase1">
+      <div class="caso-card" id="caso-content"></div>
+      <button class="btn btn-primary" onclick="showNPCs()">
+        <i class="ti ti-message-circle-2"></i> Ver opiniones de los médicos
+      </button>
+    </div>
+    <!-- Fase 2 -->
+    <div id="fase2" style="display:none;">
+      <div class="sec-label">¿Quién tiene el diagnóstico correcto?</div>
+      <div id="npcs-container"></div>
+      <button class="btn btn-primary" id="btn-confirmar" onclick="confirmar()" disabled>
+        <i class="ti ti-check"></i> Confirmar respuesta del grupo
+      </button>
+    </div>
+    <!-- Fase 3 -->
+    <div id="fase3" style="display:none;">
+      <div id="res-header" class="resultado-hero"></div>
+      <div id="res-explain" class="explain-card"></div>
+      <div class="sec-label">Revisión de diagnósticos</div>
+      <div id="npcs-res"></div>
+      <button class="btn btn-primary" id="btn-sig" onclick="siguienteCaso()" style="margin-top:8px;"></button>
+    </div>
+  </div>
+</div>
+
+<!-- ════ FINAL ════ -->
+<div id="screen-final" class="screen" style="flex-direction:column;">
+  <div class="final-hero">
+    <span class="trophy">🏆</span>
+    <div class="final-group" id="final-group"></div>
+    <div class="final-score" id="final-score-num"></div>
+    <div class="final-pts-label">PUNTOS TOTALES</div>
+    <div class="final-verdict" id="final-verdict"></div>
+  </div>
+  <div class="scroll-area">
+    <div class="card-section">
+      <div class="sec-label">Detalle por caso</div>
+      <div id="detalle-casos"></div>
+    </div>
+    <div class="card-section">
+      <div class="sec-label">Ranking general</div>
+      <div id="ranking-final"></div>
+    </div>
+    <button class="btn btn-ghost" onclick="goHome()">
+      <i class="ti ti-home"></i> Volver al inicio
+    </button>
+  </div>
+</div>
+
+<!-- ════ PIN MODAL ════ -->
+<div id="pin-overlay" class="pin-overlay" style="display:none;" onclick="if(event.target===this)cancelPin()">
+  <div class="pin-box">
+    <div style="font-size:32px;text-align:center;margin-bottom:8px;">🔐</div>
+    <div class="pin-title" style="text-align:center;">Panel docente</div>
+    <div class="pin-sub" style="text-align:center;">Ingresa el PIN de acceso</div>
+    <div class="pin-dots" id="pin-dots">
+      <div class="pin-dot" id="pd0"></div>
+      <div class="pin-dot" id="pd1"></div>
+      <div class="pin-dot" id="pd2"></div>
+      <div class="pin-dot" id="pd3"></div>
+    </div>
+    <div class="pin-numpad">
+      <button class="pin-key" onclick="pinKey('1')">1</button>
+      <button class="pin-key" onclick="pinKey('2')">2</button>
+      <button class="pin-key" onclick="pinKey('3')">3</button>
+      <button class="pin-key" onclick="pinKey('4')">4</button>
+      <button class="pin-key" onclick="pinKey('5')">5</button>
+      <button class="pin-key" onclick="pinKey('6')">6</button>
+      <button class="pin-key" onclick="pinKey('7')">7</button>
+      <button class="pin-key" onclick="pinKey('8')">8</button>
+      <button class="pin-key" onclick="pinKey('9')">9</button>
+      <button class="pin-key" onclick="pinKey('del')" style="font-size:14px;">⌫</button>
+      <button class="pin-key" onclick="pinKey('0')">0</button>
+      <button class="pin-key" onclick="pinKey('ok')" style="background:var(--red);color:#fff;border-color:var(--red);">OK</button>
+    </div>
+    <div class="pin-error" id="pin-error"></div>
+    <button class="pin-cancel" onclick="cancelPin()">Cancelar</button>
+  </div>
+</div>
+
+<script>
+// ── PIN ──
+const CORRECT_PIN = '1234'; // Cambia este PIN antes de distribuir el archivo
+let pinBuffer = '';
+
+function openPin() {
+  pinBuffer = '';
+  updatePinDots();
+  document.getElementById('pin-error').textContent = '';
+  document.getElementById('pin-overlay').style.display = 'flex';
+}
+function cancelPin() {
+  document.getElementById('pin-overlay').style.display = 'none';
+  // revert tab
+  document.getElementById('tab-grupo').classList.add('active');
+  document.getElementById('tab-docente').classList.remove('active');
+}
+function pinKey(k) {
+  const err = document.getElementById('pin-error');
+  err.textContent = '';
+  if (k === 'del') { pinBuffer = pinBuffer.slice(0,-1); }
+  else if (k === 'ok') { checkPin(); return; }
+  else if (pinBuffer.length < 4) { pinBuffer += k; }
+  updatePinDots();
+  if (pinBuffer.length === 4) setTimeout(checkPin, 150);
+}
+function updatePinDots() {
+  for (let i=0;i<4;i++) {
+    document.getElementById('pd'+i).classList.toggle('filled', i < pinBuffer.length);
+  }
+}
+function checkPin() {
+  if (pinBuffer === CORRECT_PIN) {
+    document.getElementById('pin-overlay').style.display = 'none';
+    setMode('docente');
+  } else {
+    document.getElementById('pin-error').textContent = 'PIN incorrecto. Inténtalo de nuevo.';
+    pinBuffer = '';
+    updatePinDots();
+    // shake
+    const box = document.querySelector('.pin-box');
+    box.style.animation = 'none';
+    box.style.transform = 'translateX(-8px)';
+    setTimeout(()=>{ box.style.transform='translateX(8px)'; },80);
+    setTimeout(()=>{ box.style.transform='translateX(0)'; },160);
+  }
+}
+function lockDocente() {
+  setMode('grupo');
+}
+
+// ── MODE ──
+function setMode(m) {
+  document.getElementById('tab-grupo').classList.toggle('active', m==='grupo');
+  document.getElementById('tab-docente').classList.toggle('active', m==='docente');
+  document.getElementById('panel-grupo').style.display = m==='grupo' ? 'block' : 'none';
+  document.getElementById('panel-docente').style.display = m==='docente' ? 'block' : 'none';
+  if (m==='docente') renderRanking();
+}
+
+// ── STORAGE ──
+function getStorage() { try { return JSON.parse(localStorage.getItem('qtr_v2')||'[]'); } catch(e){return[];} }
+function saveStorage(d){ try{ localStorage.setItem('qtr_v2',JSON.stringify(d)); }catch(e){} }
+function clearAll(){
+  if(confirm('¿Reiniciar todas las puntuaciones?')){ saveStorage([]); renderRanking(); }
+}
+function renderRanking(){
+  const data = getStorage().sort((a,b)=>b.total-a.total);
+  const el = document.getElementById('ranking-live');
+  const medals=['🥇','🥈','🥉'];
+  if(!data.length){
+    el.innerHTML='<div style="font-size:13px;color:var(--ink3);text-align:center;padding:1.5rem 0;"><i class="ti ti-clock"></i> Esperando grupos...</div>';
+    return;
+  }
+  el.innerHTML = data.map((g,i)=>`
+    <div class="rank-row">
+      <span class="rank-pos">${medals[i]||(i+1)}</span>
+      <span class="rank-name">${esc(g.name)}</span>
+      <span class="rank-pts">${g.total}</span>
+    </div>`).join('');
+}
+function esc(s){ return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ── CASOS DATA ──
+const CASOS=[
+  {
+    titulo:"Embarazo ectópico roto",
+    datos:[
+      {i:"ti-user",t:"Mujer, 31 años"},
+      {i:"ti-heart-rate-monitor",t:"Shock hipovolémico: PA 80/50, FC 120 lpm, palidez intensa"},
+      {i:"ti-activity",t:"Dolor pélvico severo de inicio súbito, irradiado al hombro derecho"},
+      {i:"ti-droplet",t:"β-hCG positiva (3.200 mUI/mL) · FUR: hace 7 semanas"},
+      {i:"ti-microscope",t:"Eco transvaginal: líquido libre abundante en Douglas · Útero vacío"}
+    ],
+    npcs:[
+      {n:"Dr. Ramírez",r:"Médico de urgencias",ini:"DR",bg:"#EBF5FB",tc:"#1A5276",
+       d:"Embarazo ectópico roto con hemoperitoneo",
+       a:"β-hCG positiva + útero vacío en ecografía + líquido libre abundante + shock hipovolémico = ectópico roto. Laparotomía de emergencia.",ok:true},
+      {n:"Dra. Solís",r:"Residente de ginecología",ini:"DS",bg:"#FEF9E7",tc:"#7D6608",
+       d:"Aborto incompleto con sangrado activo",
+       a:"La β-hCG positiva y el sangrado sugieren aborto. Podría manejarse con legrado y observación.",ok:false},
+      {n:"Dr. Lara",r:"Cirujano general",ini:"DL",bg:"#F2F3F4",tc:"#515A5A",
+       d:"Apendicitis aguda perforada",
+       a:"Dolor pélvico y líquido libre pueden ser apendicitis perforada. La β-hCG puede ser un falso positivo.",ok:false}
+    ],
+    exp:"El diagnóstico es <strong>embarazo ectópico roto</strong>. La β-hCG positiva con útero vacío descarta gestación intrauterina. El líquido libre en Douglas confirma hemoperitoneo. Tratamiento: <strong>laparotomía de emergencia</strong> (salpingectomía o salpingostomía según viabilidad). El metotrexato está contraindicado en inestabilidad hemodinámica."
+  },
+  {
+    titulo:"Torsión ovárica",
+    datos:[
+      {i:"ti-user",t:"Mujer, 24 años, sin antecedentes relevantes"},
+      {i:"ti-activity",t:"Dolor súbito en FID, EVA 9/10, inicio hace 3 horas"},
+      {i:"ti-mood-sick",t:"Náuseas intensas, 2 episodios de vómito, posición antálgica"},
+      {i:"ti-thermometer",t:"T° 37.2°C · Defensa muscular en FID"},
+      {i:"ti-microscope",t:"Eco Doppler: ovario derecho 6 cm, ausencia de flujo · β-hCG negativa"}
+    ],
+    npcs:[
+      {n:"Dr. Fuentes",r:"Cirujano general",ini:"DF",bg:"#F2F3F4",tc:"#515A5A",
+       d:"Apendicitis aguda",
+       a:"Dolor en FID, náuseas y vómitos en mujer joven. Apendicitis es el dx más frecuente. Laparotomía McBurney urgente.",ok:false},
+      {n:"Dra. Torres",r:"Ginecóloga de guardia",ini:"DT",bg:"#EBF5FB",tc:"#1A5276",
+       d:"Torsión ovárica derecha",
+       a:"Ovario aumentado con ausencia de flujo Doppler + dolor súbito = torsión ovárica. Laparoscopía urgente para destorsión y preservación.",ok:true},
+      {n:"Dra. Quispe",r:"Médico emergencista",ini:"DQ",bg:"#FEF9E7",tc:"#7D6608",
+       d:"Quiste ovárico roto con hemoperitoneo leve",
+       a:"Dolor súbito y ovario aumentado puede ser quiste roto. Con β-hCG negativa y paciente estable, manejo conservador con analgesia.",ok:false}
+    ],
+    exp:"El diagnóstico es <strong>torsión ovárica</strong>. La ausencia de flujo Doppler es el signo clave, aunque su presencia no la descarta. Manejo: <strong>laparoscopía urgente con destorsión primero</strong>, incluso si el ovario luce necrótico (90% recupera función). Ooforectomía solo si tejido claramente inviable. Cada hora cuenta."
+  },
+  {
+    titulo:"Absceso tubo-ovárico complicado",
+    datos:[
+      {i:"ti-user",t:"Mujer, 36 años · Antecedente de EPI hace 2 años"},
+      {i:"ti-thermometer",t:"Fiebre 39.5°C, 4 días de evolución, escalofríos"},
+      {i:"ti-activity",t:"Dolor pélvico bilateral severo, dispareunia, flujo vaginal purulento"},
+      {i:"ti-hand-stop",t:"Tacto bimanual: masa pélvica izq. dolorosa, útero fijo, cérvix en péndulo"},
+      {i:"ti-microscope",t:"TAC: colección 6 cm con pared engrosada en anexo izq. · Leuco 18.000 · PCR 180"}
+    ],
+    npcs:[
+      {n:"Dra. Medina",r:"Ginecóloga",ini:"DM",bg:"#FEF9E7",tc:"#7D6608",
+       d:"EPI sin complicar — antibiótico ambulatorio",
+       a:"Los síntomas encajan con EPI. Manejo ambulatorio con doxiciclina + metronidazol oral, sin hospitalización ni drenaje.",ok:false},
+      {n:"Dr. Castillo",r:"Cirujano general",ini:"DC",bg:"#F2F3F4",tc:"#515A5A",
+       d:"Apendicitis complicada con plastrón apendicular",
+       a:"Masa pélvica + fiebre + leucocitosis puede ser plastrón apendicular. Indicaría TAC completo y cirugía diferida.",ok:false},
+      {n:"Dr. Vega",r:"Ginecólogo de urgencias",ini:"DV",bg:"#EBF5FB",tc:"#1A5276",
+       d:"Absceso tubo-ovárico complicado",
+       a:"Colección de 6 cm + fiebre persistente + antecedente de EPI = ATO. Hospitalización + antibioterapia IV triple + evaluación para drenaje.",ok:true}
+    ],
+    exp:"El diagnóstico es <strong>absceso tubo-ovárico (ATO) complicado</strong>. Criterios de hospitalización: fiebre alta, masa pélvica, respuesta oral improbable. Tratamiento: <strong>antibioterapia IV</strong> (clindamicina + gentamicina ± ampicilina, CDC 2024). Drenaje si: &gt;5 cm, sin respuesta en 72h, o rotura con peritonitis. Cirugía abierta solo en peritonitis generalizada."
+  }
+];
+
+// ── STATE ──
+const S={
+  groupName:'',casoIdx:0,selectedNPC:null,
+  scores:[],timerInterval:null,timerStart:null
+};
+function $i(id){return document.getElementById(id);}
+
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  $i(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+
+function startGame(){
+  const name=$i('group-name').value.trim();
+  if(!name){$i('group-name').focus();return;}
+  S.groupName=name; S.casoIdx=0; S.scores=[];
+  loadCaso();
+}
+
+function loadCaso(){
+  const c=CASOS[S.casoIdx];
+  S.selectedNPC=null;
+  $i('caso-badge').textContent=`Caso ${S.casoIdx+1} de 3`;
+  $i('progress-dots').innerHTML=CASOS.map((_,i)=>
+    `<div class="dot ${i<S.casoIdx?'done':i===S.casoIdx?'active':''}"></div>`).join('');
+  $i('caso-content').innerHTML=`
+    <div class="caso-num">CASO ${S.casoIdx+1} — DIAGNÓSTICO DIFERENCIAL</div>
+    <div class="caso-title">${esc(c.titulo)}</div>
+    ${c.datos.map(d=>`<div class="dato"><i class="ti ${d.i}"></i><span>${esc(d.t)}</span></div>`).join('')}`;
+  $i('fase1').style.display='block';
+  $i('fase2').style.display='none';
+  $i('fase3').style.display='none';
+  showScreen('screen-caso');
+  startTimer();
+}
+
+function startTimer(){
+  clearInterval(S.timerInterval);
+  S.timerStart=Date.now();
+  const fill=$i('timer-fill'), num=$i('timer-num');
+  let sec=45;
+  fill.style.width='100%'; fill.style.background='var(--red)';
+  num.textContent=sec;
+  S.timerInterval=setInterval(()=>{
+    sec--;
+    num.textContent=sec;
+    fill.style.width=(sec/45*100)+'%';
+    if(sec<=10) fill.style.background='#1558A0';
+    if(sec<=0) clearInterval(S.timerInterval);
+  },1000);
+}
+
+function showNPCs(){
+  const c=CASOS[S.casoIdx];
+  $i('fase1').style.display='none';
+  $i('fase2').style.display='block';
+  $i('btn-confirmar').disabled=true;
+  S.selectedNPC=null;
+  $i('npcs-container').innerHTML=c.npcs.map((npc,i)=>`
+    <div class="npc-card" id="npc-${i}" onclick="selectNPC(${i})">
+      <div class="npc-header">
+        <div class="npc-av" style="background:${npc.bg};color:${npc.tc};">${npc.ini}</div>
+        <div><div class="npc-name">${esc(npc.n)}</div><div class="npc-role">${esc(npc.r)}</div></div>
+      </div>
+      <div class="npc-diag">${esc(npc.d)}</div>
+      <div class="npc-arg">${esc(npc.a)}</div>
+    </div>`).join('');
+}
+
+function selectNPC(i){
+  S.selectedNPC=i;
+  document.querySelectorAll('.npc-card').forEach((c,j)=>c.classList.toggle('selected',j===i));
+  $i('btn-confirmar').disabled=false;
+}
+
+function confirmar(){
+  clearInterval(S.timerInterval);
+  const c=CASOS[S.casoIdx];
+  const elapsed=Math.round((Date.now()-S.timerStart)/1000);
+  const npc=c.npcs[S.selectedNPC];
+  const ok=npc.ok;
+  const base=ok?100:0;
+  const bonus=ok?Math.max(0,Math.round((45-Math.min(elapsed,45))/45*50)):0;
+  const pts=base+bonus;
+  S.scores.push({titulo:c.titulo,ok,pts,bonus});
+
+  $i('fase2').style.display='none';
+  $i('fase3').style.display='block';
+
+  $i('res-header').innerHTML=ok
+    ?`<span class="resultado-icon">✅</span>
+      <div class="resultado-title" style="color:var(--green);">¡Diagnóstico correcto!</div>
+      <div class="resultado-pts" style="color:var(--green);">+${base} pts base${bonus?` · +${bonus} pts bonus velocidad`:''}</div>`
+    :`<span class="resultado-icon">❌</span>
+      <div class="resultado-title" style="color:var(--red);">Diagnóstico incorrecto</div>
+      <div class="resultado-pts" style="color:var(--ink3);">0 pts · Revisa la explicación clínica</div>`;
+
+  $i('res-explain').innerHTML=`<strong>Explicación clínica:</strong><br><br>${c.exp}`;
+
+  $i('npcs-res').innerHTML=c.npcs.map((n,i)=>{
+    let cls=n.ok?'correct':(i===S.selectedNPC?'wrong':'neutral-result');
+    return `<div class="npc-card ${cls}">
+      <div class="npc-header">
+        <div class="npc-av" style="background:${n.bg};color:${n.tc};">${n.ini}</div>
+        <div>
+          <div class="npc-name">${esc(n.n)} ${n.ok?'<span class="badge badge-ok">Correcto</span>':''}</div>
+          <div class="npc-role">${esc(n.r)}</div>
+        </div>
+      </div>
+      <div class="npc-diag">${esc(n.d)}</div>
+    </div>`;}).join('');
+
+  $i('btn-sig').innerHTML=S.casoIdx<2
+    ?`<i class="ti ti-arrow-right"></i> Siguiente caso (${S.casoIdx+2} de 3)`
+    :`<i class="ti ti-trophy"></i> Ver resultados finales`;
+}
+
+function siguienteCaso(){
+  S.casoIdx++;
+  S.casoIdx<CASOS.length?loadCaso():showFinal();
+}
+
+function showFinal(){
+  const total=S.scores.reduce((s,c)=>s+c.pts,0);
+  $i('final-group').textContent=S.groupName.toUpperCase();
+  $i('final-score-num').textContent=total;
+  $i('final-verdict').textContent=total>=350
+    ?'Diagnóstico excelente — nivel senior clínico.'
+    :total>=200
+    ?'Buen razonamiento clínico. ¡Sigan perfeccionándolo!'
+    :'El equipo aún puede mejorar. Revisen los casos.';
+
+  $i('detalle-casos').innerHTML=S.scores.map((s,i)=>`
+    <div class="rank-row">
+      <span class="rank-pos" style="font-size:12px;width:auto;margin-right:4px;">C${i+1}</span>
+      <span class="rank-name" style="font-size:13px;">${esc(s.titulo)}</span>
+      <span class="rank-pts" style="color:${s.ok?'var(--green)':'var(--red)'};">${s.ok?'✓':'✗'} ${s.pts}</span>
+    </div>`).join('');
+
+  const stored=getStorage();
+  const idx=stored.findIndex(g=>g.name===S.groupName);
+  if(idx>=0) stored[idx].total=Math.max(stored[idx].total,total);
+  else stored.push({name:S.groupName,total});
+  saveStorage(stored);
+
+  const ranking=stored.sort((a,b)=>b.total-a.total);
+  const medals=['🥇','🥈','🥉'];
+  $i('ranking-final').innerHTML=ranking.map((g,i)=>`
+    <div class="rank-row ${g.name===S.groupName?'me':''}">
+      <span class="rank-pos">${medals[i]||(i+1)}</span>
+      <span class="rank-name">${esc(g.name)}${g.name===S.groupName?' <span class="badge badge-you">Tú</span>':''}</span>
+      <span class="rank-pts">${g.total}</span>
+    </div>`).join('');
+
+  showScreen('screen-final');
+}
+
+function goHome(){ showScreen('screen-home'); setMode('grupo'); }
+</script>
+</body>
+</html>
